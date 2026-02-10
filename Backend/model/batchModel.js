@@ -1,0 +1,57 @@
+const mongoose=require("mongoose");
+
+const batchSchema=new mongoose.Schema({
+    batchname:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    batchStatus:{
+        type:String,
+        enum:["Active","Completed"],
+        default:"Active"
+    },
+    totalchick:{
+        type:Number,
+        required:true,
+        min:1
+    },
+    currentchick:{
+        type:Number,
+        required:true,
+        min:1
+    },
+    deliveredby:{
+        type:String,
+        required:true
+    },
+    vehicleno:{
+        type:String,
+        required:true
+    },
+    delivereddate:{
+        type:Date,
+        default:Date.now()
+    },
+    completedate:{
+        type:Date
+    },
+    totalweight:{
+        type:Number,
+        default:0
+    },
+    totalmortality:{
+        type:Number,
+        default:0
+    },
+    totalfeed:{
+        type:Number,
+        defaul7t:0
+    },
+    userid:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    }
+},{timestamps:true});
+
+module.exports=mongoose.model("Batch",batchSchema);
