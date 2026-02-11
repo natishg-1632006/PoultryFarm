@@ -5,7 +5,7 @@ import api from '../utils/api';
 const Login = () => {
 
   return (
-    <div className='min-h-screen flex flex-col items-center justify-center'>
+    <div className='h-svh flex flex-col items-center justify-center'>
       <p className='text-[50px] flex items-center'><GiChicken className='text-amber-600' />Login</p>
       <form className='flex flex-col gap-4 w-96 p-10 shadow-xl rounded-xl'>
         <label htmlFor="username" className='text-[15px] font-bold'>User name</label>
