@@ -6,6 +6,7 @@ const DailyEntryForm = () => {
             <div className='w-100 shadow-lg p-3 rounded-xl'>
                 <p className='text-center text-2xl font-bold text-amber-700'><span className='text-4xl text-amber-800'>D</span>aily Entry</p>
                 <form className='flex flex-col gap-3 '>
+                    
                     <label htmlFor="mortality" className='font-bold'>Mortality</label>
                     <input type='number' id='mortality' placeholder='Enter mortality' className='outline-2  outline-amber-600 rounded-lg p-2 ' />
 

@@ -6,6 +6,7 @@ import NavBar from './component/pages/NavBar';
 import DailyEntry from './component/pages/DailyEntry';
 import FeedEntry from './component/pages/FeedEntry';
 import MedicineEntry from './component/pages/MedicineEntry';
+import BatchEntry from './component/pages/BatchEntry';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path='/dailyentry' element={<DailyEntry/>}/>
         <Route path='/feed' element={<FeedEntry/>}/>
         <Route path='/medicine' element={<MedicineEntry/>}/>
+        <Route path='/newBatch' element={<BatchEntry/>}/>
       </Routes>
     </div>
   )
