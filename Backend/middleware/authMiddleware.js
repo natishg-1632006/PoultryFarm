@@ -1,4 +1,5 @@
 const jwt=require("jsonwebtoken");
+const User=require("../model/userModel");
 
 const authMiddleware=async (req,res,next)=>{
     const authHeader=req.headers["authorization"];
@@ -14,10 +15,32 @@ const authMiddleware=async (req,res,next)=>{
 
     try {
         const decodeData=jwt.verify(token,process.env.JWT_SECRET_KEY);
+        if(!decodeData){
+            return res.status(200).json({
+                success:false,
+                message:"Invalid token"
+            })
+        }
+        
+        const userFound=await User.findById({_id:decodeData.userid});
+        
+        if(!userFound){
+            return res.status(200).josn({
+                success:false,
+                message:"user not found"
+            })
+        }
+        res.status(200).json({
+            success:true,
+            message:"Valid user",
+        })
         req.userInfo=decodeData;
         next();
     } catch (error) {
-        console.log(error.message);
+       res.status(500).json({
+        success:false,
+        message:"Server side error"
+       })
     }
 }
 

@@ -3,10 +3,11 @@ import './index.css'
 import App from './App.jsx'
 import GlobalState from './component/context/GlobalContext.jsx'
 import {BrowserRouter} from 'react-router-dom'
+import AuthContext from './component/context/AuthContext.jsx'
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <GlobalState>
+    <AuthContext>
      <App />
-   </GlobalState>
+   </AuthContext>
   </BrowserRouter>
 )
