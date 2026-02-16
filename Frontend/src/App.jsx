@@ -8,6 +8,7 @@ import MedicineEntry from './component/pages/MedicineEntry';
 import BatchEntry from './component/pages/BatchEntry';
 import ProtectedRoute from './component/utils/ProtectedRoute';
 import { ToastContainer, toast } from 'react-toastify';
+import DashBoard from './component/pages/DashBoard';
 
 function App() {
   return (
@@ -58,9 +59,18 @@ function App() {
           } 
         />
 
+        <Route 
+          path='/dashBoard' 
+          element={
+            <ProtectedRoute allowedRoles={["admin", "user"]}>
+              <DashBoard/>
+            </ProtectedRoute>
+          } 
+        />
+
         {/* New Batch - Admin Only */}
         <Route 
-          path='/newBatch' 
+          path='/newbatch' 
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <BatchEntry/>

@@ -112,6 +112,23 @@ const userLogin = async (req, res) => {
     }
 
 }
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      data: users
+    });
+
+  } catch (error) {
+    console.log("GET USERS ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
 const verify=()=>{
     res.status({
@@ -124,5 +141,6 @@ const verify=()=>{
 module.exports = {
     userRegister,
     userLogin,
+    getUsers,
     verify
 }

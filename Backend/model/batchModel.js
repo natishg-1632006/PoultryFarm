@@ -46,7 +46,7 @@ const batchSchema=new mongoose.Schema({
     },
     totalfeed:{
         type:Number,
-        defaul7t:0
+        default:0
     },
     userid:{
         type:mongoose.Schema.Types.ObjectId,

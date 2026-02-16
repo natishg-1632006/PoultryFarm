@@ -1,4 +1,5 @@
 const Batch=require("../model/batchModel");
+const User=require("../model/userModel");
 
 const getAllBatch=async (req,res)=>{
     try {
@@ -19,24 +20,52 @@ const getAllBatch=async (req,res)=>{
     }
 }
 
-const createNewBatch=async (req,res)=>{
+const createNewBatch = async (req, res) => {
     try {
-        const newlycreatedBatch=await Batch.create(req.body);
-        if(!newlycreatedBatch){
-            res.status(400).json({
-                success:false,
-                message:"Batch not created"
-            })
+
+        const { userid } = req.body;
+
+        if (!userid) {
+            return res.status(400).json({
+                success: false,
+                message: "User id is required"
+            });
         }
-        res.status(201).json({
-            success:true,
-            message:"New batch added successfully",
-            data:newlycreatedBatch
-        })
+
+        const userData = await User.findById(userid);
+
+        if (!userData) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const batchCount = await Batch.countDocuments({ userid });
+
+        const batchName = `${userData.username}-batch-${batchCount + 1}`;   
+
+        const newlycreatedBatch = await Batch.create({
+            ...req.body,
+            batchname: batchName,
+            userid
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "New batch added successfully",
+            data: newlycreatedBatch
+        });
+
     } catch (error) {
-        console.log(error.message);
-    }
+   console.log("FULL ERROR:", error);
+   return res.status(500).json({
+      success: false,
+      message: error.message
+   });
 }
+
+};
 
 const updateBatch=async (req,res)=>{
     try {

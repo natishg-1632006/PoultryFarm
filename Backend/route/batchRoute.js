@@ -5,7 +5,7 @@ const adminMiddleware=require("../middleware/adminMiddleware");
 const route=express.Router();
 
 route.get("/allbatch",getAllBatch);
-route.post("/newbatch",authMiddleware,adminMiddleware,createNewBatch);
+route.post("/newbatch",createNewBatch);
 route.put("/:id",authMiddleware,adminMiddleware,updateBatch);
 route.delete("/:id",authMiddleware,adminMiddleware,deleteBatch);
 

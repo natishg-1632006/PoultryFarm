@@ -30,11 +30,12 @@ const authMiddleware=async (req,res,next)=>{
                 message:"user not found"
             })
         }
+        req.userInfo=decodeData;
         res.status(200).json({
             success:true,
-            message:"Valid user",
+            message:"Valid users",
+            user:req.userInfo
         })
-        req.userInfo=decodeData;
         next();
     } catch (error) {
        res.status(500).json({
