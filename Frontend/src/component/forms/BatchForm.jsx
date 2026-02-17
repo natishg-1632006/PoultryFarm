@@ -12,9 +12,7 @@ const BatchForm = () => {
         }
     }, [user]);
 
-    const validUsers = users.filter((data) => {
-        return data.role === "user"
-    })
+   
 
     const [batchData, setBatchData] = useState({
         totalchick: "",
@@ -72,7 +70,7 @@ const BatchForm = () => {
                         <label htmlFor="userid" className='font-bold'>Total chick</label>
                         <select id="userid" name='userid' required value={batchData.userid} onChange={handelChange} className='outline-2 outline-amber-600 rounded-lg p-3 0'>
                             <option value="">Select user</option>
-                            {validUsers.map((data, index) => {
+                            {users.map((data, index) => {
                                 return <option value={data._id} key={index}> {data.username.charAt(0).toUpperCase() + data.username.slice(1)} - {data.email}</option>
                             })}
                         </select>

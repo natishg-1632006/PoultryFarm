@@ -11,6 +11,7 @@ const AuthContext = ({ children }) => {
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [batch,setBatch]=useState([]);
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -39,6 +40,25 @@ const AuthContext = ({ children }) => {
     verifyUser();
   }, [])
 
+useEffect(() => {
+  const fetchBatch = async () => {
+    if (!user) return;
+    if(user){
+      try {
+        const res = await api.get(`batch/${user.userid}`);
+        if(res.data.success){
+          setBatch(res.data.batch);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+
+    }
+  };
+  fetchBatch();
+}, [user]);
+
+
   const login = (user) => {
     setUser(user);
   }
@@ -49,21 +69,23 @@ const AuthContext = ({ children }) => {
     navigate("/login");
   }
 
-  const getUsers=async()=>{
-      try {
-         const token = localStorage.getItem("token");
-        if (token) {
-          const res = await api.get("auth/getUsers")
+  const getUsers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const res = await api.get("auth/getUsers")
+        if(res){
           setUsers(res.data.data);
         }
-      } catch (error) {
-        console.log(error.message);
-        
       }
+    } catch (error) {
+      console.log(error.message);
+
+    }
   }
 
   return (
-    <userContext.Provider value={{ user, login, logout, getUsers, users }}>
+    <userContext.Provider value={{ user, login, logout, getUsers, users, batch }}>
       {children}
     </userContext.Provider>
   )

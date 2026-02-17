@@ -20,6 +20,26 @@ const getAllBatch=async (req,res)=>{
     }
 }
 
+const getUserBatch=async (req,res)=>{
+try {
+    const id=req.params.id;
+    const batchData=await Batch.findOne({userid:id,batchStatus:"Active"});
+    if(!batchData){
+         res.status(200).json({
+        success:false,
+        message:"Batch not found",
+    })
+    }
+    res.status(200).json({
+        success:true,
+        message:"Batch data fetched",
+        batch:batchData
+    })
+} catch (error) {
+    console.log(error.message);
+}
+}
+
 const createNewBatch = async (req, res) => {
     try {
 
@@ -106,4 +126,4 @@ const deleteBatch=async (req,res)=>{
     }
 }
 
-module.exports={getAllBatch,createNewBatch,updateBatch,deleteBatch};
+module.exports={getAllBatch,createNewBatch,updateBatch,deleteBatch,getUserBatch};

@@ -97,8 +97,8 @@ const userLogin = async (req, res) => {
             success: true,
             message: "Token created successfully",
             token: token,
-            user:{
-                userId:userData._id,
+            user: {
+                userId: userData._id,
                 email: userData.email,
                 role: userData.role
             }
@@ -113,28 +113,30 @@ const userLogin = async (req, res) => {
 
 }
 const getUsers = async (req, res) => {
-  try {
-    const users = await User.find({}).select("-password");
+    try {
+        const users = await User.find({
+            role: "user"
+        }).select("-password");
 
-    return res.status(200).json({
-      success: true,
-      data: users
-    });
+        return res.status(200).json({
+            success: true,
+            data: users
+        });
 
-  } catch (error) {
-    console.log("GET USERS ERROR:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
+    } catch (error) {
+        console.log("GET USERS ERROR:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
-const verify=()=>{
+const verify = () => {
     res.status({
-        success:true,
-        message:"valid user",
-        user:req.userInfo
+        success: true,
+        message: "valid user",
+        user: req.userInfo
     })
 }
 
