@@ -5,36 +5,43 @@ import { toast } from 'react-toastify';
 
 const FeedForm = () => {
 
-    const {batch}=useAuth();
-    const [feed,setFeed]=useState({
-        feedpack:"",
-        feedcategory:"",
-        feedtype:"",
-        deliveredDate:"",
-        deliveredby:"",
-        vehicleno:""
+    const { batch } = useAuth();
+    const [feed, setFeed] = useState({
+        feedpack: "",
+        feedcategory: "",
+        feedtype: "",
+        deliveredDate: "",
+        deliveredby: "",
+        vehicleno: ""
     })
 
-    const handelChange=(e)=>{
-        const {name,value}=e.target;
+    const handelChange = (e) => {
+        const { name, value } = e.target;
         setFeed({
             ...feed,
-            [name]:value
+            [name]: value
         })
     }
 
-    const handleSubmit=async(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token =localStorage.getItem("token");
-            if(token){
-                const res=await api.post("feed/addfeed",{
+            const token = localStorage.getItem("token");
+            if (token) {
+                const res = await api.post("feed/addfeed", {
                     ...feed,
-                    userid:batch._id,
-                    batchid:batch._id
+                    userid: batch._id,
+                    batchid: batch._id
                 })
-                if(res.data.success){
-                    console.log(res);
+                if (res.data.success) {
+                    setFeed({
+                        feedpack: "",
+                        feedcategory: "",
+                        feedtype: "",
+                        deliveredDate: "",
+                        deliveredby: "",
+                        vehicleno: ""
+                    })
                     toast.success("Feed added")
                 }
             }
@@ -43,17 +50,17 @@ const FeedForm = () => {
         }
     }
 
-  return (
-    
+    return (
+
         <div className='max-h-screen p-5 mt-16 mb-5 flex justify-center items-center'>
             <div onSubmit={handleSubmit} className='w-100 shadow-lg p-3 rounded-xl'>
                 <p className='text-center text-2xl font-bold text-amber-700'><span className='text-4xl text-amber-800'>F</span>eed Entry</p>
-                
-                <form  className='flex flex-col gap-3 '>
-                    
+
+                <form className='flex flex-col gap-3 '>
+
                     <label htmlFor="feedpack" className='font-bold'>Feed</label>
                     <input type='number' id='feedpack' required name='feedpack' value={feed.feedpack} onChange={handelChange} placeholder='Enter feed' className='outline-2  outline-amber-600 rounded-lg p-2 ' />
-    
+
                     <label htmlFor="feedcategory" className='font-bold'>Feed category</label>
                     <select id="feedcategory" required name='feedcategory' value={feed.feedcategory} onChange={handelChange} className='outline-2 outline-amber-600 rounded-lg p-3 0'>
                         <option value="">Select category</option>
@@ -71,7 +78,7 @@ const FeedForm = () => {
 
                     <label htmlFor="deliveredDate" className='font-bold'>Date</label>
                     <div className='flex flex-col gap-2 border-2 p-2 w-full border-amber-600 rounded-lg justify-between'>
-                    <input type="date" required id="deliveredDate" name='deliveredDate' value={feed.deliveredDate} onChange={handelChange} className='outline-none'/>
+                        <input type="date" required id="deliveredDate" name='deliveredDate' value={feed.deliveredDate} onChange={handelChange} className='outline-none' />
                     </div>
 
                     <label htmlFor="deliveredby" className='font-bold'>Delivered by</label>
@@ -85,7 +92,7 @@ const FeedForm = () => {
 
             </div>
         </div>
-  )
+    )
 }
 
 export default FeedForm;

@@ -23,23 +23,23 @@ const Home = () => {
                <p className="text-2xl font-bold ">Daily entry</p>
                <IoIosArrowDroprightCircle className="text-3xl font-bold text-purple-800" />
             </div>
-            <div className='w-80 bg-purple-300 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
+            <div  onClick={()=>navigate("/feed")} className='w-80 cursor-pointer bg-purple-200 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
                <p className="text-2xl font-bold ">New feed</p>
                <IoIosArrowDroprightCircle className="text-3xl font-bold text-purple-800" />
             </div>
-            <div className='w-80 bg-purple-200 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
+            <div  onClick={()=>navigate("/dashboard")} className='w-80 cursor-pointer bg-purple-200 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
                <p className="text-2xl font-bold ">Dashboard</p>
                <IoIosArrowDroprightCircle className="text-3xl font-bold text-purple-800" />
             </div>
-            <div className='w-80 bg-purple-300 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
+            <div  onClick={()=>navigate("/medicine")} className='w-80 cursor-pointer bg-purple-200 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
                <p className="text-2xl font-bold">Medicine</p>
                <IoIosArrowDroprightCircle className="text-3xl font-bold text-purple-800" />
             </div>
-           {user && user.role=="admin" && <div onClick={()=>newBatch()} className='w-80 bg-purple-200 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
+           {user && user.role=="admin" && <div onClick={()=>newBatch()} className='w-80 cursor-pointer bg-purple-200 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
                <p className="text-2xl font-bold">New batch</p>
                <IoIosArrowDroprightCircle className="text-3xl font-bold text-purple-800" />
             </div>}
-            <div className='w-80 bg-purple-300 border-l-6 border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
+            <div className='w-80 bg-purple-200 border-l-6 cursor-pointer border-purple-700 rounded-lg h-20 shadow-lg flex items-center justify-between p-5'>
                <p className="text-2xl font-bold">History</p>
                <IoIosArrowDroprightCircle className="text-3xl font-bold text-purple-800" />
             </div>
