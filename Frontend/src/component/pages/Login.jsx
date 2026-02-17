@@ -52,16 +52,16 @@ const Login = () => {
 
   return (
     <div className='h-svh flex flex-col items-center justify-center'>
-      <p className='text-[50px] flex items-center'><GiChicken className='text-amber-600' />Login</p>
-      <form onSubmit={handelUserSubmit} className='flex flex-col gap-4 w-96 p-10 shadow-xl rounded-xl'>
+      <p className='text-[50px] flex items-center'><GiChicken className='text-purple-600' />Login</p>
+      <form onSubmit={handelUserSubmit} className='flex flex-col border-l-4 border-purple-700 shadow-purple-500 gap-4 w-96 p-10 shadow-2xl rounded-xl'>
 
         <label htmlFor="email" className='text-[15px] font-bold'>User name</label>
-        <input type="email" id="email" name="email" required value={userData.email} onChange={handelChange} className='outline-2 outline-amber-600 rounded-lg p-2 focus:outline-2 focus:outline-amber-500' placeholder='Enter username' />
+        <input type="email" id="email" name="email" required value={userData.email} onChange={handelChange} className='outline-2 outline-purple-600 rounded-lg p-2 focus:outline-2 focus:outline-purple-500' placeholder='Enter username' />
 
         <label htmlFor="password" className='text-[15px] font-bold'>Password</label>
-        <input type="password" id="password" name="password" required value={userData.password} onChange={handelChange} className='outline-2 outline-amber-600 rounded-lg p-2 focus:outline-2 focus:outline-amber-500' placeholder='Enter password' />
+        <input type="password" id="password" name="password" required value={userData.password} onChange={handelChange} className='outline-2 outline-purple-600 rounded-lg p-2 focus:outline-2 focus:outline-purple-500' placeholder='Enter password' />
 
-        <button type='submit' className='bg-amber-600 p-2 cursor-pointer rounded-lg text-[15px] font-bold text-white' >Login</button>
+        <button type='submit' className='bg-purple-600 p-2 cursor-pointer rounded-lg text-[15px] font-bold text-white' >Login</button>
       </form>
     </div>
   )
