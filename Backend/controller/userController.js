@@ -1,4 +1,5 @@
 const User = require("../model/userModel");
+const Batch = require("../model/batchModel");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userRegister = async (req, res) => {
@@ -93,6 +94,8 @@ const userLogin = async (req, res) => {
             })
         }
 
+        const activeBatch = await Batch.findOne({ userid: userData._id, batchStatus: "Active" });
+
         return res.status(200).json({
             success: true,
             message: "Token created successfully",
@@ -101,7 +104,8 @@ const userLogin = async (req, res) => {
                 userId: userData._id,
                 email: userData.email,
                 role: userData.role
-            }
+            },
+            activeBatch: activeBatch || null
         })
     } catch (error) {
         console.log(error.message);
@@ -132,8 +136,8 @@ const getUsers = async (req, res) => {
     }
 };
 
-const verify = () => {
-    res.status({
+const verify = (req, res) => {
+    res.status(200).json({
         success: true,
         message: "valid user",
         user: req.userInfo

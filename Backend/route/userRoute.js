@@ -1,7 +1,6 @@
 const express=require("express");
-const { userRegister, userLogin, getUsers } = require("../controller/userController");
+const { userRegister, userLogin, getUsers, verify } = require("../controller/userController");
 const authMiddleware=require("../middleware/authMiddleware");
-const { verify } = require("jsonwebtoken");
 
 const route=express.Router();
 

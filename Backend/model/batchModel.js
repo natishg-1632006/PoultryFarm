@@ -40,6 +40,14 @@ const batchSchema=new mongoose.Schema({
         type:Number,
         default:0
     },
+    overallweight:{
+        type:Number,
+        default:0
+    },
+    feedback:{
+        type:String,
+        default:""
+    },
     totalmortality:{
         type:Number,
         default:0

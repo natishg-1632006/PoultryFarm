@@ -25,17 +25,12 @@ const authMiddleware=async (req,res,next)=>{
         const userFound=await User.findById({_id:decodeData.userid});
         
         if(!userFound){
-            return res.status(200).josn({
+            return res.status(200).json({
                 success:false,
                 message:"user not found"
             })
         }
         req.userInfo=decodeData;
-        res.status(200).json({
-            success:true,
-            message:"Valid users",
-            user:req.userInfo
-        })
         next();
     } catch (error) {
        res.status(500).json({

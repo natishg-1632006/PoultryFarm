@@ -3,12 +3,15 @@ import BatchForm from './BatchForm'
 import { useAuth } from '../context/AuthContext'
 import api from '../utils/api'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const DailyEntryForm = () => {
 
-    const { batch } = useAuth();
+    const { batch, setBatch } = useAuth();
+    const navigate = useNavigate();
+    
     const [dailyEntry, setDailyEntry] = useState({
-        mortality: "",
+        mortality: 0,
         feedcount: "",
         feedtype: "",
         unit: "",
@@ -36,9 +39,13 @@ const DailyEntryForm = () => {
             });
 
             if (res.data.success) {
-                toast.success("Today entry added successfully")
+                toast.success("Today entry added successfully");
+                const batchRes = await api.get(`batch/${batch.userid}`);
+                if (batchRes.data.success) {
+                    setBatch(batchRes.data.batch);
+                }
                 setDailyEntry({
-                    mortality: "",
+                    mortality: 0,
                     feedcount: "",
                     feedtype: "",
                     unit: "",
@@ -46,9 +53,10 @@ const DailyEntryForm = () => {
                     avgweight: "",
                     createdAt: ""
                 });
+                navigate('/');
             }
             else {
-                toast.error("Promblem store data")
+                toast.error("Problem store data")
             }
         } catch (error) {
             console.log(error);
@@ -56,44 +64,58 @@ const DailyEntryForm = () => {
     }
 
     return (
-        <div className='max-h-screen p-5 mt-16 mb-5 flex justify-center items-center'>
-            <div className='w-100 shadow-lg p-3 rounded-xl' >
-                <p className='text-center text-2xl font-bold text-amber-700'><span className='text-4xl text-amber-800'>D</span>aily Entry</p>
-                <form className='flex flex-col gap-3 ' onSubmit={handleSubmit}>
+        <div className='min-h-screen p-4 md:p-8 mt-16 mb-5 flex justify-center items-center bg-gradient-to-br from-purple-50 to-white'>
+            <div className='w-full max-w-2xl bg-white shadow-2xl p-6 md:p-10 rounded-3xl border-t-8 border-purple-600'>
+                <div className='text-center mb-8'>
+                    <p className='text-3xl md:text-4xl font-bold text-purple-700'>Daily Entry</p>
+                    <p className='text-sm text-gray-500 mt-2'>Record today's farm activities</p>
+                </div>
+                <form className='grid grid-cols-1 md:grid-cols-2 gap-6' onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="mortality" className='font-bold text-gray-700 mb-2 block'>Mortality</label>
+                        <input type='number' id='mortality' name='mortality' value={dailyEntry.mortality} onChange={handelChange} placeholder='Enter mortality count' className='w-full border-2 border-gray-300 focus:border-purple-600 rounded-xl p-3 transition-all outline-none' />
+                    </div>
 
-                    <label htmlFor="mortality" className='font-bold'>Mortality</label>
-                    <input type='number' id='mortality' name='mortality' value={dailyEntry.mortality} onChange={handelChange} placeholder='Enter mortality' className='outline-2  outline-amber-600 rounded-lg p-2 ' />
+                    <div>
+                        <label htmlFor="feedcount" className='font-bold text-gray-700 mb-2 block'>Feed Count</label>
+                        <input type='number' required id='feedcount' name='feedcount' value={dailyEntry.feedcount} onChange={handelChange} placeholder='Enter feed amount' className='w-full border-2 border-gray-300 focus:border-purple-600 rounded-xl p-3 transition-all outline-none' />
+                    </div>
 
-                    <label htmlFor="feedcount" className='font-bold'>Feed</label>
-                    <input type='number' required id='feedcount' name='feedcount' value={dailyEntry.feedcount} onChange={handelChange} placeholder='Enter feed' className='outline-2 outline-amber-600 rounded-lg p-2 ' />
-
-                    <label htmlFor="feedType" className='font-bold'>Feed type</label>
-                    <select id="feedType" required name='feedtype' value={dailyEntry.feedtype} onChange={handelChange} className='outline-2 outline-amber-600 rounded-lg p-3 0'>
-                        <option value="">Select Type</option>
-                        <option value="Pre-starter">Pre-starter</option>
-                        <option value="Starter">Starter</option>
-                        <option value="Finisher">Finisher</option>
-                    </select>
-
-                    <label htmlFor="avgweight" className='font-bold'>Avg weight</label>
-                    <div className='border-2 p-2 border-amber-600 rounded-lg flex justify-between'>
-                        <input type='number' required id="avgweight" name='avgweight' value={dailyEntry.avgweight} onChange={handelChange} placeholder='Enter avg weight' className='outline-none w-full p-0' />
-                        <select id="unit" name='unit' value={dailyEntry.unit} onChange={handelChange} className='outline-none'>
-                            <option value="">Select unit</option>
-                            <option value="g">g</option>
-                            <option value="kg">kg</option>
+                    <div>
+                        <label htmlFor="feedType" className='font-bold text-gray-700 mb-2 block'>Feed Type</label>
+                        <select id="feedType" required name='feedtype' value={dailyEntry.feedtype} onChange={handelChange} className='w-full border-2 border-gray-300 focus:border-purple-600 rounded-xl p-3 transition-all outline-none'>
+                            <option value="">Select Type</option>
+                            <option value="Pre-starter">Pre-starter</option>
+                            <option value="Starter">Starter</option>
+                            <option value="Finisher">Finisher</option>
                         </select>
                     </div>
 
-                    <label htmlFor="createdAt" className='font-bold'>Date</label>
-                    <div className='flex flex-col gap-2 border-2 p-2 w-full border-amber-600 rounded-lg justify-between'>
-                        <input type="date" required id="createdAt" name='createdAt' value={dailyEntry.createdAt} onChange={handelChange} className='outline-none' />
+                    <div>
+                        <label htmlFor="avgweight" className='font-bold text-gray-700 mb-2 block'>Average Weight</label>
+                        <div className='flex gap-2'>
+                            <input type='number' required id="avgweight" name='avgweight' value={dailyEntry.avgweight} onChange={handelChange} placeholder='Weight' className='flex-1 border-2 border-gray-300 focus:border-purple-600 rounded-xl p-3 transition-all outline-none' />
+                            <select id="unit" name='unit' value={dailyEntry.unit} onChange={handelChange} className='border-2 border-gray-300 focus:border-purple-600 rounded-xl p-3 transition-all outline-none'>
+                                <option value="">Unit</option>
+                                <option value="g">g</option>
+                                <option value="kg">kg</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <label htmlFor="feedback" className='font-bold'>Feedback</label>
-                    <textarea type='number' required id='feedback' name='feedback' value={dailyEntry.feedback} onChange={handelChange} placeholder='Enter feedback' className='outline-2 outline-amber-600 rounded-lg p-2 ' />
+                    <div>
+                        <label htmlFor="createdAt" className='font-bold text-gray-700 mb-2 block'>Date</label>
+                        <input type="date" required id="createdAt" name='createdAt' value={dailyEntry.createdAt} onChange={handelChange} className='w-full border-2 border-gray-300 focus:border-purple-600 rounded-xl p-3 transition-all outline-none' />
+                    </div>
 
-                    <button type='submit' className='bg-amber-600 p-2 cursor-pointer rounded-lg text-[15px] font-bold text-white'>Submit</button>
+                    <div className='md:col-span-2'>
+                        <label htmlFor="feedback" className='font-bold text-gray-700 mb-2 block'>Feedback</label>
+                        <textarea required id='feedback' name='feedback' value={dailyEntry.feedback} onChange={handelChange} placeholder='Enter your observations' className='w-full border-2 border-gray-300 focus:border-purple-600 rounded-xl p-3 transition-all outline-none h-24 resize-none' />
+                    </div>
+
+                    <div className='md:col-span-2'>
+                        <button type='submit' className='w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white p-3 rounded-xl text-lg font-bold transition-all transform hover:scale-105 shadow-lg'>Submit Entry</button>
+                    </div>
                 </form>
             </div>
         </div>

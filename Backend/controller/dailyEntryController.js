@@ -1,4 +1,5 @@
 const DailyEntry = require("../model/dailyEntryModel");
+const Batch = require("../model/batchModel");
 
 const currentBatchEntry = async (req, res) => {
     try {
@@ -24,21 +25,59 @@ const currentBatchEntry = async (req, res) => {
 
 const createNewEntry = async (req, res) => {
     try {
+        const { batchid, userid } = req.body;
+        
+        // Check if user already created entry today
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        const existingEntry = await DailyEntry.findOne({
+            batchid,
+            userid,
+            createdAt: { $gte: today, $lt: tomorrow }
+        });
+        
+        if (existingEntry) {
+            return res.status(400).json({
+                success: false,
+                message: "You have already created a daily entry today. Only admin can update or delete it."
+            });
+        }
+        
         const newlyCretedEntry = await DailyEntry.create(req.body);
         if (!newlyCretedEntry) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "Data not stored"
             });
         }
 
-        res.status(201).json({
+        const batch = await Batch.findById(batchid);
+        if (batch) {
+            const mortality = Number(req.body.mortality) || 0;
+            const feedcount = Number(req.body.feedcount) || 0;
+            const avgweight = Number(req.body.avgweight) || 0;
+            
+            batch.currentchick = Math.max(0, batch.currentchick - mortality);
+            batch.totalmortality = (batch.totalmortality || 0) + mortality;
+            batch.totalfeed = (batch.totalfeed || 0) + feedcount;
+            batch.totalweight = avgweight * batch.currentchick;
+            await batch.save();
+        }
+
+        return res.status(201).json({
             success: true,
             message: "New daily data stored",
             data: newlyCretedEntry
         })
     } catch (error) {
         console.log(error.message);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 

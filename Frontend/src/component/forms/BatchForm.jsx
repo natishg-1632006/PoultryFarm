@@ -12,8 +12,6 @@ const BatchForm = () => {
         }
     }, [user]);
 
-   
-
     const [batchData, setBatchData] = useState({
         totalchick: "",
         currentchick: "",
@@ -25,20 +23,16 @@ const BatchForm = () => {
 
     const handelChange = (e) => {
         const { name, value } = e.target;
-
         setBatchData(prev => ({
             ...prev,
             [name]: value
         }));
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await api.post("/batch/newbatch", batchData);
-
             if (response.data.success) {
                 toast.success(`New batch Created ${response.data.data.batchname}`);
                 setBatchData({
@@ -50,49 +44,56 @@ const BatchForm = () => {
                     userid: ""
                 })
             }
-
         } catch (error) {
             console.log(error);
         }
     };
 
-
     return (
-        <div>
-            <div className='max-h-screen p-5 mt-16 mb-5 flex justify-center items-center'>
-                <div className='w-100 shadow-lg p-3 rounded-xl'>
-                    <p className='text-center text-2xl font-bold text-amber-700'><span className='text-4xl text-amber-800'>B</span>atch Entry</p>
-                    <form onSubmit={handleSubmit} className='flex flex-col gap-3 '>
+        <div className='min-h-screen mt-16 mb-16 p-4 md:p-8 bg-gradient-to-br from-purple-50 to-white flex justify-center items-center'>
+            <div className='w-full max-w-2xl bg-white shadow-2xl rounded-3xl p-6 md:p-10'>
+                <p className='text-3xl md:text-4xl font-bold text-purple-700 text-center mb-8'>Create New Batch</p>
+                <form onSubmit={handleSubmit} className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6'>
 
-                        <label htmlFor="totalchick" className='font-bold'>Total chick</label>
-                        <input type='number' id='totalchick' required name='totalchick' onChange={handelChange} value={batchData.totalchick} placeholder='Enter total chick' className='outline-2  outline-amber-600 rounded-lg p-2 ' />
-
-                        <label htmlFor="userid" className='font-bold'>Total chick</label>
-                        <select id="userid" name='userid' required value={batchData.userid} onChange={handelChange} className='outline-2 outline-amber-600 rounded-lg p-3 0'>
+                    <div className='md:col-span-2'>
+                        <label htmlFor="userid" className='block text-gray-700 font-bold mb-2'>Select User *</label>
+                        <select id="userid" name='userid' required value={batchData.userid} onChange={handelChange} className='w-full border-2 border-purple-600 rounded-xl p-3 outline-none font-semibold'>
                             <option value="">Select user</option>
                             {users.map((data, index) => {
                                 return <option value={data._id} key={index}> {data.username.charAt(0).toUpperCase() + data.username.slice(1)} - {data.email}</option>
                             })}
                         </select>
+                    </div>
 
+                    <div>
+                        <label htmlFor="totalchick" className='block text-gray-700 font-bold mb-2'>Total Chicks *</label>
+                        <input type='number' id='totalchick' required name='totalchick' onChange={handelChange} value={batchData.totalchick} placeholder='Enter total chicks' className='w-full border-2 border-purple-600 rounded-xl p-3 outline-none' />
+                    </div>
 
-                        <label htmlFor="currentchick" className='font-bold'>Current chick</label>
-                        <input type='number' id='currentchick' required name='currentchick' onChange={handelChange} value={batchData.currentchick} placeholder='Enter medicine name' className='outline-2  outline-amber-600 rounded-lg p-2 ' />
+                    <div>
+                        <label htmlFor="currentchick" className='block text-gray-700 font-bold mb-2'>Current Chicks *</label>
+                        <input type='number' id='currentchick' required name='currentchick' onChange={handelChange} value={batchData.currentchick} placeholder='Enter current chicks' className='w-full border-2 border-purple-600 rounded-xl p-3 outline-none' />
+                    </div>
 
-                        <label htmlFor="deliveredDate" className='font-bold'>Date</label>
-                        <div className='flex flex-col gap-2 border-2 p-2 w-full border-amber-600 rounded-lg justify-between'>
-                            <input type="date" id="deliveredDate" required name='deliveredDate' onChange={handelChange} value={batchData.deliveredDate} className='outline-none' />
-                        </div>
+                    <div>
+                        <label htmlFor="deliveredDate" className='block text-gray-700 font-bold mb-2'>Delivered Date *</label>
+                        <input type="date" id="deliveredDate" required name='deliveredDate' onChange={handelChange} value={batchData.deliveredDate} className='w-full border-2 border-purple-600 rounded-xl p-3 outline-none' />
+                    </div>
 
-                        <label htmlFor="deliveredby" className='font-bold'>Delivered by</label>
-                        <input type='text' id='deliveredby' required name='deliveredby' onChange={handelChange} value={batchData.deliveredby} placeholder='Enter name' className='outline-2  outline-amber-600 rounded-lg p-2 ' />
+                    <div>
+                        <label htmlFor="deliveredby" className='block text-gray-700 font-bold mb-2'>Delivered By *</label>
+                        <input type='text' id='deliveredby' required name='deliveredby' onChange={handelChange} value={batchData.deliveredby} placeholder='Enter name' className='w-full border-2 border-purple-600 rounded-xl p-3 outline-none' />
+                    </div>
 
-                        <label htmlFor="vehicleno" className='font-bold'>Vehicle no</label>
-                        <input type='text' id='vehicleno' required name='vehicleno' onChange={handelChange} value={batchData.vehicleno} placeholder='Enter feedback' className='outline-2 outline-amber-600 rounded-lg p-2 ' />
+                    <div className='md:col-span-2'>
+                        <label htmlFor="vehicleno" className='block text-gray-700 font-bold mb-2'>Vehicle Number *</label>
+                        <input type='text' id='vehicleno' required name='vehicleno' onChange={handelChange} value={batchData.vehicleno} placeholder='Enter vehicle number' className='w-full border-2 border-purple-600 rounded-xl p-3 outline-none' />
+                    </div>
 
-                        <button type='submit' className='bg-amber-600 p-2 cursor-pointer rounded-lg text-[15px] font-bold text-white'>Submit</button>
-                    </form>
-                </div>
+                    <div className='md:col-span-2'>
+                        <button type='submit' className='w-full bg-purple-600 hover:bg-purple-700 text-white p-3 md:p-4 rounded-xl text-lg font-bold transition-all transform hover:scale-105 shadow-lg'>Create Batch</button>
+                    </div>
+                </form>
             </div>
         </div>
     )

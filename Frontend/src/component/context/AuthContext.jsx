@@ -1,34 +1,39 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from '../utils/api';
-
+import api from "../utils/api";
 
 const userContext = createContext();
 
 const AuthContext = ({ children }) => {
-
   const navigate = useNavigate();
+
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [batch, setBatch] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [batch,setBatch]=useState([]);
 
   useEffect(() => {
     const verifyUser = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (token) {
-          const res = await api.get("auth/verify", {
-            headers: {
-              "Authorization": `Bearer ${token}`
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        const res = await api.get("auth/verify", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.data.success) {
+          setUser(res.data.user);
+          const userId = res.data.user.userId || res.data.user.userid || res.data.user._id;
+          if (userId) {
+            const batchRes = await api.get(`batch/${userId}`);
+            if (batchRes.data.success) {
+              setBatch(batchRes.data.batch);
+              localStorage.setItem("batchid", batchRes.data.batch._id);
             }
-          })
-          if (res.data.success) {
-            setUser(res.data.user);
-          }
-          else {
-            setUser(null);
-            setLoading(false);
           }
         }
       } catch (error) {
@@ -36,60 +41,43 @@ const AuthContext = ({ children }) => {
       } finally {
         setLoading(false);
       }
-    }
+    };
     verifyUser();
-  }, [])
+  }, []);
 
-useEffect(() => {
-  const fetchBatch = async () => {
-    if (!user) return;
-    if(user){
-      try {
-        const res = await api.get(`batch/${user.userid}`);
-        if(res.data.success){
-          setBatch(res.data.batch);
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-
+  const login = async (userData, activeBatch) => {
+    setUser(userData);
+    setBatch(activeBatch);
+    if (activeBatch) {
+      localStorage.setItem("batchid", activeBatch._id);
     }
   };
-  fetchBatch();
-}, [user]);
-
-
-  const login = (user) => {
-    setUser(user);
-  }
 
   const logout = () => {
     setUser(null);
+    setBatch(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("batchid");
     navigate("/login");
-  }
+  };
 
   const getUsers = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const res = await api.get("auth/getUsers")
-        if(res){
-          setUsers(res.data.data);
-        }
+      const res = await api.get("auth/getUsers");
+      if (res.data.success) {
+        setUsers(res.data.data);
       }
     } catch (error) {
       console.log(error.message);
-
     }
-  }
+  };
 
   return (
-    <userContext.Provider value={{ user, login, logout, getUsers, users, batch }}>
+    <userContext.Provider value={{ user, users, batch, setBatch, login, logout, getUsers, loading }}>
       {children}
     </userContext.Provider>
-  )
-}
+  );
+};
 
 export const useAuth = () => useContext(userContext);
-export default AuthContext
+export default AuthContext;

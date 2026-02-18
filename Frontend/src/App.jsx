@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Login from './component/pages/Login'
 import Home from './component/pages/Home';
 import NavBar from './component/pages/NavBar';
@@ -9,13 +9,20 @@ import BatchEntry from './component/pages/BatchEntry';
 import ProtectedRoute from './component/utils/ProtectedRoute';
 import { ToastContainer, toast } from 'react-toastify';
 import DashBoard from './component/pages/DashBoard';
+import History from './component/pages/History';
+import BatchDashboard from './component/pages/BatchDashboard';
+import CompleteBatch from './component/pages/CompleteBatch';
+import { useAuth } from './component/context/AuthContext';
 
 function App() {
+  const { user } = useAuth();
+  const location = useLocation();
+  
   return (
     <div className='relative'>
       <NavBar/>
 
-      <Routes>
+      <Routes key={user?.userid || 'no-user'} location={location}>
 
         <Route path='/login' element={<Login/>}/>
 
@@ -29,31 +36,31 @@ function App() {
           } 
         />
 
-        {/* Daily Entry - Admin & User */}
+        {/* Daily Entry - User Only */}
         <Route 
           path='/dailyentry' 
           element={
-            <ProtectedRoute allowedRoles={["admin", "user"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <DailyEntry/>
             </ProtectedRoute>
           } 
         />
 
-        {/* Feed Entry - Admin & User */}
+        {/* Feed Entry - User Only */}
         <Route 
           path='/feed' 
           element={
-            <ProtectedRoute allowedRoles={["admin", "user"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <FeedEntry/>
             </ProtectedRoute>
           } 
         />
 
-        {/* Medicine Entry - Admin & User */}
+        {/* Medicine Entry - User Only */}
         <Route 
           path='/medicine' 
           element={
-            <ProtectedRoute allowedRoles={["admin", "user"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <MedicineEntry/>
             </ProtectedRoute>
           } 
@@ -63,7 +70,25 @@ function App() {
           path='/dashBoard' 
           element={
             <ProtectedRoute allowedRoles={["admin", "user"]}>
-              <DashBoard/>
+              <DashBoard key={user?.userid} />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path='/history' 
+          element={
+            <ProtectedRoute allowedRoles={["admin", "user"]}>
+              <History key={user?.userid} />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path='/batch-dashboard/:batchid' 
+          element={
+            <ProtectedRoute allowedRoles={["admin", "user"]}>
+              <BatchDashboard/>
             </ProtectedRoute>
           } 
         />
@@ -74,6 +99,16 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <BatchEntry/>
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* Complete Batch - Admin Only */}
+        <Route 
+          path='/complete-batch/:batchid' 
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <CompleteBatch/>
             </ProtectedRoute>
           } 
         />
